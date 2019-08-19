@@ -11,5 +11,11 @@
   <body>
     <div id="map"></div>
     <script src="setup.js"></script>
+    <div class="container">
+      <div class="background">
+        <input type="range" min="2011" max="2018" value="2018" onchange="changeText(this.value), filterMap(this.value)" class ="slider">
+        <div id="text">2007 - 2017</div>
+      </div>
+    </div>
   </body>
 </html>
