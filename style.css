@@ -11,6 +11,11 @@ body {
   width:100%;
 }
 
+p {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 .container {
   position: absolute;
   min-width: 25px;
@@ -40,6 +45,14 @@ body {
 }
 
 #text {
+  position: relative;
+  text-align: center;
+  font-size: 18px;
+  color: white;
+  text-shadow: 0 0 3px black;
+}
+
+#info {
   position: relative;
   text-align: center;
   font-size: 18px;
