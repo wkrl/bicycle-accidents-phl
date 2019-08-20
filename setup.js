@@ -1,6 +1,7 @@
 // Map based on crash data for the years 2007-2017 from the Pennsylvania Department of Transportation
 // cityofphiladelphia.github.io/carto-api-explorer/#crash_data_collision_crash_2007_2017
 
+let popUp;
 let countFeatures = {
   "countAll": 0,
   "years": {
@@ -65,12 +66,12 @@ function setup() {
     let description = e.features[0].properties.description;
 
     // Get address
-    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${coordinates[0]},${coordinates[1]}.json?access_token=pk.eyJ1Ijoia3d4cmwiLCJhIjoiY2pzZXJsNGdtMHY2bzQ0dDBjYmszNDVreiJ9.eIx7nzD5Mer3gcshBucfLw`)
+    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${coordinates[0]},${coordinates[1]}.json?types=address&access_token=pk.eyJ1Ijoia3d4cmwiLCJhIjoiY2pzZXJsNGdtMHY2bzQ0dDBjYmszNDVreiJ9.eIx7nzD5Mer3gcshBucfLw`)
     .then(response => response.json())
     .then(data => {
       let address = data.features[0].place_name;
       let street = address.slice(0, address.indexOf(","));
-      new mapboxgl.Popup()
+      popUp = new mapboxgl.Popup({className: "popUpText"})
         .setLngLat(coordinates)
         .setHTML("<b>" + street + "</b><br>" + description)
         .addTo(map);
@@ -156,6 +157,15 @@ function filterMap(value) {
     changeInfo(countFeatures.countAll);
   } else {
     map.setFilter('crashes', ['==', 'year', parseInt(value)]);
+    // Remove pop-up if filtered
+    // Check if description exists
+    if (document.getElementsByClassName("popUpText")[0]) {
+      popUpYear = document.getElementsByClassName("popUpText")[0].innerText.slice(-5, -1);
+      if (popUpYear != parseInt(value)) {
+          popUp.remove();
+      }
+    }
+    // Update total count
     changeInfo(Object.values(countFeatures)[1][value]);
   }
 }
