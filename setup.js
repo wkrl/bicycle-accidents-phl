@@ -61,8 +61,20 @@ function setup() {
   });
 
   map.on('click', 'crashes', function(e) {
-    var coordinates = e.features[0].geometry.coordinates.slice();
-    var description = e.features[0].properties.description
+    let coordinates = e.features[0].geometry.coordinates.slice();
+    let description = e.features[0].properties.description;
+
+    // Get address
+    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${coordinates[0]},${coordinates[1]}.json?access_token=pk.eyJ1Ijoia3d4cmwiLCJhIjoiY2pzZXJsNGdtMHY2bzQ0dDBjYmszNDVreiJ9.eIx7nzD5Mer3gcshBucfLw`)
+    .then(response => response.json())
+    .then(data => {
+      let address = data.features[0].place_name;
+      let street = address.slice(0, address.indexOf(","));
+      new mapboxgl.Popup()
+        .setLngLat(coordinates)
+        .setHTML("<b>" + street + "</b><br>" + description)
+        .addTo(map);
+    });
 
     // Ensure that if the map is zoomed out such that multiple
     // copies of the feature are visible, the popup appears
@@ -75,11 +87,6 @@ function setup() {
       center: coordinates,
       speed: 0.2
     });
-
-    new mapboxgl.Popup()
-      .setLngLat(coordinates)
-      .setHTML(description)
-      .addTo(map);
   });
 
   map.on('mouseenter', 'crashes', function() {
